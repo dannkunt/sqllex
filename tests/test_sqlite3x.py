@@ -37,17 +37,17 @@ class TestSqllexSQLite(unittest.TestCase):
         Testing SQLite database init
         """
 
-        db_name = f"{self.db_name}_{1}"
+        db_name = f"{self.db_name}_1"
         SQLite3x(db_name)
         self.assertTrue(os.path.isfile(db_name))
         os.remove(db_name)
 
-        db_name = f"{self.db_name}_{2}"
+        db_name = f"{self.db_name}_2"
         SQLite3x(path=db_name)
         self.assertTrue(os.path.isfile(db_name))
         os.remove(db_name)
 
-        db_name = f"{self.db_name}_{3}"
+        db_name = f"{self.db_name}_3"
         SQLite3x(db_name, init_connection=False)
         self.assertFalse(os.path.isfile(db_name))
 
@@ -65,15 +65,15 @@ class TestSqllexSQLite(unittest.TestCase):
         Testing connection with class object init
         """
 
-        db_name = f"{self.db_name}_{1}"
+        db_name = f"{self.db_name}_1"
         self.assertIsInstance(SQLite3x(db_name).connection, sqlite3.Connection)
         os.remove(db_name)
 
-        db_name = f"{self.db_name}_{1}"
+        db_name = f"{self.db_name}_1"
         self.assertIsInstance(SQLite3x(db_name, init_connection=True).connection, sqlite3.Connection)
         os.remove(db_name)
 
-        db_name = f"{self.db_name}_{1}"
+        db_name = f"{self.db_name}_1"
         self.assertIs(SQLite3x(db_name, init_connection=False).connection, None)
 
     def test_transaction(self):

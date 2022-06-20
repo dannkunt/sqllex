@@ -17,10 +17,10 @@ class TransactionStatus:
     """
 
     def __init__(self, value: int):
-        if value not in (0, 1):
+        if value in {0, 1}:
+            self.__value = value
+        else:
             raise ValueError(f"TransactionStatus value can be 0 or 1, not {value}")
-
-        self.__value = value
 
     @property
     def is_done(self):
@@ -43,10 +43,7 @@ class TransactionStatus:
             raise ArithmeticError("Transaction is not finished yet")
 
     def __str__(self):
-        if self.is_done:
-            return "Done"
-        else:
-            return "Active"
+        return "Done" if self.is_done else "Active"
 
     def __repr__(self):
         return f"<TransactionStatus(value={self.__value}, status='{self.__str__()}')>"

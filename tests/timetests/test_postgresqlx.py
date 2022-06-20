@@ -32,7 +32,7 @@ class TimeTestsSqllexPostgres(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.complexity = 1000
-        cls.db_name = f"test_sqllex_db"
+        cls.db_name = "test_sqllex_db"
 
         conn = psycopg2.connect(
             dbname='postgres',
@@ -88,7 +88,7 @@ class TimeTestsSqllexPostgres(unittest.TestCase):
     @save_prof
     def test_insert_fast(self):
         for _ in range(self.complexity):
-            self.db.insert('main', (_, f'Alex', 33))
+            self.db.insert('main', (_, 'Alex', 33))
 
     @save_prof
     def test_insert_slow(self):

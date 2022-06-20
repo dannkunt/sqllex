@@ -22,7 +22,7 @@ def from_as_(func: callable):
 
     def as_wrapper(*args, **kwargs):
         if isinstance(kwargs.get("TABLE"), (list, tuple)):
-            TABLE = " ".join(t_arg for t_arg in kwargs.pop("TABLE"))
+            TABLE = " ".join(kwargs.pop("TABLE"))
             kwargs.update({"TABLE": TABLE})
 
         return func(*args, **kwargs)
@@ -107,7 +107,7 @@ def where_(placeholder: AnyStr = '?') -> callable:
                             operator = "="
 
                         __script += f"({f' {operator} {placeholder} OR '.join(str(key) for _ in values)} {operator} {placeholder} OR "   # spaaces need for [LIKE, regexp]
-                        __script = f"{__script[:-3].strip()}) " + "AND "
+                        __script = f"{__script[:-3].strip()}) AND "
 
                         if __values:
                             if isinstance(__values[0], tuple):

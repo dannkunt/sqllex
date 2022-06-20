@@ -31,7 +31,7 @@ class TimeTestsSqllexSQLite(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.complexity = 1000
-        cls.db_name = f"test_sqllex_db"
+        cls.db_name = "test_sqllex_db"
         cls.db = SQLite3x(path=cls.db_name)
 
     @classmethod
@@ -53,7 +53,7 @@ class TimeTestsSqllexSQLite(unittest.TestCase):
     @save_prof
     def test_insert_fast(self):
         for _ in range(self.complexity):
-            self.db.insert('main', (None, f'Alex', 33))
+            self.db.insert('main', (None, 'Alex', 33))
 
     @save_prof
     def test_insert_slow(self):
