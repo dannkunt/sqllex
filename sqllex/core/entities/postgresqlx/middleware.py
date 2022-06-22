@@ -23,13 +23,8 @@ def execute(script: AnyStr, values: Tuple, connection: AbstractConnection):
             try:
                 return cur.fetchall()
 
-            # except psycopg2.ProgrammingError:
-            #     pass
-
             except Exception as exc:
-                if "ProgrammingError" in exc.__class__.__name__:
-                    pass
-                else:
+                if "ProgrammingError" not in exc.__class__.__name__:
                     raise exc
 
         except Exception as error:
@@ -58,13 +53,8 @@ def executemany(script: AnyStr, values: Tuple, connection: AbstractConnection):
             try:
                 return cur.fetchall()
 
-            # except psycopg2.ProgrammingError:
-            #     pass
-
             except Exception as exc:
-                if "ProgrammingError" in exc.__class__.__name__:
-                    pass
-                else:
+                if "ProgrammingError" not in exc.__class__.__name__:
                     raise exc
 
         except Exception as error:
@@ -93,13 +83,8 @@ def executescript(script: AnyStr, connection: AbstractConnection):
             try:
                 return cur.fetchall()
 
-            # except psycopg2.ProgrammingError:
-            #     pass
-
             except Exception as exc:
-                if "ProgrammingError" in exc.__class__.__name__:
-                    pass
-                else:
+                if "ProgrammingError" not in exc.__class__.__name__:
                     raise exc
 
         except Exception as error:

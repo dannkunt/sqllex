@@ -54,11 +54,10 @@ class SearchCondition:
         return self._str_gen(other, ' AND ')
 
     def __or__(self, value):
-        if self.liked:
-            self.values += (value,)
-            return self
-        else:
+        if not self.liked:
             return self._str_gen(value, ' OR ')
+        self.values += (value,)
+        return self
 
     def __hash__(self):
         return hash(f"{self.script}")

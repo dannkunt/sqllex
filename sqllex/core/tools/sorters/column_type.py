@@ -24,7 +24,4 @@ def column_types(val: Union[ColumnDataType, AnyStr]) -> int:
 
     prior = CONST_PRIORITY.get(val)  # How about set dict.setdefault(1) ?
 
-    if prior is None:
-        return 1
-    else:
-        return prior
+    return 1 if prior is None else prior

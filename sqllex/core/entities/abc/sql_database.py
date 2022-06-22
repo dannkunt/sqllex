@@ -837,7 +837,7 @@ class AbstractDatabase(ABC):
         if args:
             args = tuple(filter(lambda ar: len(ar) > 0, args[0]))  # removing [] (empty lists from inserting values)
 
-            if len(args) == 0:  # if args empty after filtering, break the function, yes it'll break
+            if not args:  # if args empty after filtering, break the function, yes it'll break
                 logger.warning("insertmany/updatemany failed, due to no values to insert/update")
                 return '', tuple()
 
@@ -962,15 +962,10 @@ class AbstractDatabase(ABC):
 
         # (column1, val1, column2, val2)
         if isinstance(SET, tuple):
-            new_set = {}
-
-            if len(SET) % 2 == 0:  # for ['name', 'Alex', 'age', 2]
-                for i in range(len(SET) // 2):
-                    new_set.update({SET[2 * i]: SET[2 * i + 1]})
-
-            else:
+            if len(SET) % 2 != 0:
                 raise TypeError
 
+            new_set = {SET[2 * i]: SET[2 * i + 1] for i in range(len(SET) // 2)}
             SET: dict = new_set
 
         for (key, val) in SET.items():
@@ -1230,11 +1225,8 @@ class AbstractDatabase(ABC):
                 column_type = (column_type,)
 
             self.execute(
-                f"ALTER TABLE "
-                f"'{table}' "
-                f"ADD "
-                f"'{column_name}' "
-                f"{' '.join(ct for ct in column_type)}")
+                f"ALTER TABLE '{table}' ADD '{column_name}' {' '.join(column_type)}"
+            )
 
     def remove_column(  # !!!
             self,
@@ -1354,29 +1346,25 @@ class AbstractDatabase(ABC):
         """
 
         if args:
-            if isinstance(args[0], (tuple, list, dict)):
-                data = args[0]
-            else:
-                data = args
+            data = args[0] if isinstance(args[0], (tuple, list, dict)) else args
         elif kwargs:
             data = kwargs
         else:
             raise ValueError("No data to insert")
 
         try:
-            if isinstance(data, (tuple, list)):
-                script, values = self._fast_insert_stmt(
-                    data=data,
-                    TABLE=TABLE,
-                    script="INSERT",
-                    OR=OR,
-                    WITH=WITH,
-                )
-
-                self.execute(script=script, values=values)
-
-            else:
+            if not isinstance(data, (tuple, list)):
                 raise ValueError("No arguments for fast insertion")
+
+            script, values = self._fast_insert_stmt(
+                data=data,
+                TABLE=TABLE,
+                script="INSERT",
+                OR=OR,
+                WITH=WITH,
+            )
+
+            self.execute(script=script, values=values)
 
         except (OperationalError, ValueError):
             script, values = self._insert_stmt(
@@ -1410,28 +1398,24 @@ class AbstractDatabase(ABC):
         """
 
         if args:
-            if isinstance(args[0], (tuple, list, dict)):
-                data = args[0]
-            else:
-                data = args
+            data = args[0] if isinstance(args[0], (tuple, list, dict)) else args
         elif kwargs:
             data = kwargs
         else:
             raise ValueError("No data to insert")
 
         try:
-            if args:
-                script, values = self._fast_insert_stmt(
-                    data=data,
-                    script="REPLACE",
-                    TABLE=TABLE,
-                    WHERE=WHERE,
-                )
-
-                self.execute(script=script, values=values)
-
-            else:
+            if not args:
                 raise ValueError("No arguments for fast insertion")
+
+            script, values = self._fast_insert_stmt(
+                data=data,
+                script="REPLACE",
+                TABLE=TABLE,
+                WHERE=WHERE,
+            )
+
+            self.execute(script=script, values=values)
 
         except (OperationalError, ValueError):
             script, values = self._insert_stmt(

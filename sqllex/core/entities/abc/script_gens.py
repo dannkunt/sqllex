@@ -10,11 +10,7 @@ from functools import lru_cache
 
 @lru_cache(maxsize=32)
 def insert_fast(table: str, ph_amount: int, need_space: bool = None, placeholder='?'):
-    return f"" \
-           f"{' ' if need_space else ''}" \
-           f'INTO "{str(table)}" ' \
-           f"VALUES (" \
-           f"{', '.join((placeholder for _ in range(ph_amount)))})"
+    return f"""{' ' if need_space else ''}INTO "{table}" VALUES ({', '.join((placeholder for _ in range(ph_amount)))})"""
 
 
 @lru_cache(maxsize=32)
@@ -24,12 +20,7 @@ def insert_fast_with_prefix(script: str, table: str, ph_amount: int, placeholder
 
 @lru_cache(maxsize=32)
 def insert(script: str, table: str, columns: tuple, placeholder='?'):
-    return f"" \
-           f"{script} " \
-           f'INTO "{str(table)}" (' \
-           f""""{'", "'.join(col for col in columns)}") """ \
-           f"VALUES (" \
-           f"{', '.join((placeholder for _ in range(len(columns))))})"
+    return f"""{script} INTO "{table}" ("{'", "'.join(columns)}") VALUES ({', '.join((placeholder for _ in range(len(columns))))})"""
 
 
 @lru_cache(maxsize=32)
@@ -39,10 +30,7 @@ def update_script(table: str, script: str):
 
 @lru_cache(maxsize=32)
 def select(method: str, columns: tuple, table: str = None):
-    return f"" \
-           f"{method} "\
-           f"""{', '.join(str(col) for col in columns)} """\
-           f'FROM "{str(table)}" '
+    return f"""{method} {', '.join((str(col) for col in columns))} FROM "{table}" """
 
 
 @lru_cache(maxsize=32)
